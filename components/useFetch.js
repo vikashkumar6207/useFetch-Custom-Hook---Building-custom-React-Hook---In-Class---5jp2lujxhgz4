@@ -1,11 +1,11 @@
-
+"use client"
 import React, { useEffect, useState } from "react";
 
-export default function useFetch({ url }) {
-  const [data, setData] = useState('');
+export default function useFetch(url) {
+  const [data, setData] = useState(null);
   const [loading, setLoding] = useState(false);
   const [error, setError] = useState(false);
-  console.log(data);
+ 
   useEffect(() => {
     setLoding(true);
 
@@ -14,11 +14,12 @@ export default function useFetch({ url }) {
       .then((res) => { 
         if(res.error){ setError(true)
         }else{
-        setData(res)
+        setData(res.data);
+        
         }
     })
       .catch((err)=> setError(true))
       .finally(() => setLoding(false));
   }, []);
-  return{ data, loading, error };
+  return{ data , loading, error };
 }
