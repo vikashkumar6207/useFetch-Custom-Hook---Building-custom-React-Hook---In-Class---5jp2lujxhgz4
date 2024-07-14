@@ -1,28 +1,30 @@
-//write your code here
-"use client"
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-function useFetch(url) {
-  const [data, setData] = useState(null);
-  const [loading, setLoding] = useState(false);
-  const [error, setError] = useState(false);
- 
-  useEffect(() => {
-    setLoding(true);
+export default function useFetch(url){
+    const [data, setData] = useState();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
 
-    fetch(url)
-      .then((res) => res.json())    
-      .then((res) => { 
-        if(res.error){ setError(true)
-        }else{
-        setData(res.data);
-        
+
+    useEffect(() => {
+        setLoading(true);
+        async function fetchData(){
+            try{
+                const response = await fetch(url);
+                const data = await response.json();
+
+                setData(data);
+                // console.log(data);
+
+            }catch(error){
+                setError(error);
+            }finally{
+                setLoading(false);
+            }
         }
-    })
-      .catch((err)=> setError(true))
-      .finally(() => setLoding(false));
-  }, []);
-  return{ data , loading, error };
-}
+        fetchData();
+    }, [url]);
 
-export default useFetch;
+
+    return {data, loading, error};
+}
